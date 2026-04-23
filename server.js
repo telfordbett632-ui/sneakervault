@@ -25,6 +25,9 @@ if (!MONGO_URI) {
 const DB_NAME = "sneakervault";
 const JWT_SECRET = process.env.JWT_SECRET || "sneakervault_super_secret_key_2026";
 
+// server.js lives at the repo root; index.html is in public/, admin.html in admin/
+const PUBLIC_DIR  = path.join(__dirname, "public");
+const ADMIN_DIR   = path.join(__dirname, "admin");
 const UPLOADS_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
@@ -37,8 +40,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(UPLOADS_DIR));
 
-// Serve static files (index.html, admin.html) from the same folder as server.js
-app.use(express.static(path.join(__dirname)));
+// Serve static assets from public/ folder
+app.use(express.static(PUBLIC_DIR));
 
 // ─── FILE UPLOAD ──────────────────────────────────────────────────────────────
 const storage = multer.diskStorage({
@@ -855,11 +858,11 @@ app.get("/api/admin/stats", auth, adminOnly, async (req, res) => {
 
 // ─── SERVE ADMIN PAGE ─────────────────────────────────────────────────────────
 app.get("/admin", (req, res) => {
-  const adminPath = path.join(__dirname, "admin.html");
+  const adminPath = path.join(__dirname, "admin", "admin.html");
   if (fs.existsSync(adminPath)) {
     res.sendFile(adminPath);
   } else {
-    res.status(404).send("<h2>admin.html not found. Make sure it is in the same folder as server.js</h2>");
+    res.status(404).send("<h2>admin.html not found in admin/ subfolder</h2>");
   }
 });
 
@@ -871,11 +874,11 @@ app.get(/(.*)/, (req, res) => {
   if (req.path.startsWith("/api/")) {
     return res.status(404).json({ error: "API endpoint not found" });
   }
-  const indexPath = path.join(__dirname, "index.html");
+  const indexPath = path.join(__dirname, "public", "index.html");
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    res.status(404).json({ error: "index.html not found" });
+    res.status(404).json({ error: "index.html not found in public/ subfolder" });
   }
 });
 
