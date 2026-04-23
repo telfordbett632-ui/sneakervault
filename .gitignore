@@ -1,0 +1,19 @@
+# Environment
+.env
+
+# Database (auto-created at runtime)
+sneakervault.db
+
+# Uploaded product images (runtime)
+public/uploads/*.jpg
+public/uploads/*.png
+public/uploads/*.webp
+!public/uploads/placeholder.jpg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log*
