@@ -14,11 +14,16 @@ const fs = require("fs");
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-const MONGO_URI = "mongodb+srv://telfordbett632_db_user:StTaUlaVbhyg6fvy@cluster0.qcrjyfe.mongodb.net/sneakervault?retryWrites=true&w=majority";
-const DB_NAME = "sneakervault";          // ← This is the database that will be created
-const JWT_SECRET = "sneakervault_super_secret_key_2026";
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
+  console.error("❌ MONGO_URI environment variable is not set. Exiting.");
+  process.exit(1);
+}
+
+const DB_NAME = "sneakervault";
+const JWT_SECRET = process.env.JWT_SECRET || "sneakervault_super_secret_key_2026";
 
 const UPLOADS_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -883,7 +888,7 @@ connectDB()
       console.log(`🚀  SneakerVault server running!`);
       console.log(`🌐  Store:   http://localhost:${PORT}`);
       console.log(`🛠️   Admin:   http://localhost:${PORT}/admin`);
-      console.log(`📦  DB:      mongodb://127.0.0.1:27017/${DB_NAME}`);
+      console.log(`📦  DB:      MongoDB Atlas (${DB_NAME})`);
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     });
   })
