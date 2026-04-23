@@ -16,7 +16,7 @@ const fs = require("fs");
 const app = express();
 const PORT = 3000;
 
-const MONGO_URI = "mongodb://127.0.0.1:27017";
+const MONGO_URI = "mongodb+srv://telfordbett632_db_user:<db_password>@cluster0.qcrjyfe.mongodb.net/?appName=Cluster0";
 const DB_NAME = "sneakervault";          // ← This is the database that will be created
 const JWT_SECRET = "sneakervault_super_secret_key_2026";
 
