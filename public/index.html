@@ -191,13 +191,18 @@
     try {
       const res = await fetch(HEALTH_URL, { cache: 'no-store' });
       if (res.ok) {
-        // Server is up — redirect to store
-        bar.style.width   = '100%';
-        bar.style.background = '#22c55e';
-        msg.textContent   = 'Ready! Taking you in…';
-        msg.className     = 'status-msg ready';
-        setTimeout(() => { window.location.replace(STORE_URL); }, 600);
-        return;
+        const data = await res.json().catch(() => ({}));
+        // Only redirect when server explicitly says status: "ok" (DB is ready)
+        if (data.status === 'ok') {
+          bar.style.width      = '100%';
+          bar.style.background = '#22c55e';
+          msg.textContent      = 'Ready! Taking you in…';
+          msg.className        = 'status-msg ready';
+          // Use /?_ready=1 so the server middleware lets us through even if
+          // isReady hasn't flipped yet on a racing request
+          setTimeout(() => { window.location.replace('/?_ready=1'); }, 800);
+          return;
+        }
       }
     } catch (_) { /* still booting */ }
 

@@ -73,6 +73,9 @@ app.use((req, res, next) => {
   if (isReady) return next();
   // Always pass API and health routes through so the splash page can poll /health
   if (req.path.startsWith("/api/") || req.path === "/health") return next();
+  // FIX: Allow the loading splash to redirect to /?_ready=1 which bypasses this
+  // middleware and goes straight to index.html once we know DB is up.
+  if (req.query._ready === "1") return next();
   // Serve the loading splash
   const loadingPath = path.join(__dirname, "public", "loading.html");
   if (fs.existsSync(loadingPath)) return res.sendFile(loadingPath);
