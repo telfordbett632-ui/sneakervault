@@ -68,24 +68,30 @@ const client = new MongoClient(MONGO_URI, {
 let db;
 let isReady = false; // flips true once DB is connected
 
-// Middleware: while server is still waking up, serve loading.html for page requests
-app.use((req, res, next) => {
-  if (isReady) return next();
-  // Always pass API and health routes through so the splash page can poll /health
-  if (req.path.startsWith("/api/") || req.path === "/health") return next();
-  // FIX: Allow the loading splash to redirect to /?_ready=1 which bypasses this
-  // middleware and goes straight to index.html once we know DB is up.
-  if (req.query._ready === "1") return next();
-  // Serve the loading splash
+// ─── ROOT ROUTE: Show loading splash until DB is ready ───────────────────────
+// When Render wakes the server from a cold start the DB isn't connected yet.
+// Visitors hitting / will see loading.html which polls /health every 2 s and
+// auto-redirects to / once the server reports { status: "ok" }.
+app.get("/", (req, res) => {
+  if (!isReady) {
+    const loadingPath = path.join(__dirname, "public", "loading.html");
+    if (fs.existsSync(loadingPath)) return res.sendFile(loadingPath);
+    // Fallback if file is missing — keep polling via a tiny inline page
+    return res.send(`<!DOCTYPE html><html><head><meta http-equiv="refresh" content="3;url=/"></head><body style="background:#0a0a0a;color:#f5f4f0;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0"><p>Starting up… please wait.</p></body></html>`);
+  }
+  // DB is ready — serve the real store
+  const indexPath = path.join(__dirname, "public", "index.html");
+  if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
+  res.status(404).send("<h2>index.html not found in public/</h2>");
+});
+
+// /loading still works as a direct URL (handy for testing)
+app.get("/loading", (req, res) => {
   const loadingPath = path.join(__dirname, "public", "loading.html");
   if (fs.existsSync(loadingPath)) return res.sendFile(loadingPath);
-  // Bare-bones fallback if loading.html isn't in public/ yet
-  res.send(`<!DOCTYPE html><html><head><meta http-equiv="refresh" content="3"><title>Loading…</title></head>
-    <body style="background:#0a0a0a;color:#f5f4f0;font-family:sans-serif;display:flex;align-items:center;
-    justify-content:center;height:100vh;margin:0"><div style="text-align:center">
-    <div style="font-size:4rem">👟</div><p style="margin-top:1rem;opacity:.5">Waking up… refreshing shortly</p>
-    </div></body></html>`);
+  res.send("<h2>loading.html not found in public/</h2>");
 });
+
 
 async function connectDB() {
   await client.connect();
