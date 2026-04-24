@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,7 +166,7 @@
   const btn    = document.getElementById('manualBtn');
 
   let attempts  = 0;
-  const MAX     = 30;          // give up showing spinner after ~60s
+  const MAX     = 45;          // ~90s total — enough for Render cold start + DB connect
   const DELAY   = 2000;        // poll every 2 seconds
 
   // Animate bar to show "something is happening"
@@ -207,8 +208,8 @@
       return; // stop polling, show manual button
     }
 
-    // Show manual button as a fallback after 20s regardless
-    if (attempts === 10) btn.style.display = 'inline-block';
+    // Show manual button as a fallback after 40s regardless
+    if (attempts === 20) btn.style.display = 'inline-block';
 
     setTimeout(ping, DELAY);
   }

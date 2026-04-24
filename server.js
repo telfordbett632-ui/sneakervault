@@ -309,6 +309,10 @@ function adminOnly(req, res, next) {
 
 // ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
 app.get("/health", (req, res) => {
+  // FIX: Return 503 while DB is still connecting so the loading splash keeps polling
+  if (!isReady) {
+    return res.status(503).json({ status: "starting", uptime: process.uptime() });
+  }
   res.json({ status: "ok", uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
 
@@ -908,29 +912,34 @@ app.get(/(.*)/, (req, res) => {
 });
 
 // ─── START SERVER ─────────────────────────────────────────────────────────────
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log("");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log(`🚀  SneakerVault server running!`);
-      console.log(`🌐  Store:   http://localhost:${PORT}`);
-      console.log(`🛠️   Admin:   http://localhost:${PORT}/admin`);
-      console.log(`📦  DB:      MongoDB Atlas (${DB_NAME})`);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    });
-  })
-  .catch((err) => {
-    console.error("");
-    console.error("❌ Failed to connect to MongoDB!");
-    console.error("   Make sure MongoDB is running: mongod --dbpath /data/db");
-    console.error("   Error:", err.message);
-    process.exit(1);
-  });
+// FIX: Listen FIRST so Render's health checks pass immediately and the loading
+// splash can be served while MongoDB connects in the background.
+app.listen(PORT, () => {
+  console.log("");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log(`🚀  SneakerVault server listening on port ${PORT}`);
+  console.log(`🌐  Store:   http://localhost:${PORT}`);
+  console.log(`🛠️   Admin:   http://localhost:${PORT}/admin`);
+  console.log(`📦  DB:      Connecting to MongoDB Atlas…`);
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+});
+
+// Connect DB in the background — isReady flips true when done
+connectDB().catch((err) => {
+  console.error("");
+  console.error("❌ Failed to connect to MongoDB!");
+  console.error("   Error:", err.message);
+  // Don't exit — keep serving the loading splash so users see an error state
+  // instead of a dead connection. Render will show logs with the real cause.
+});
 
 // ─── KEEP-ALIVE SELF-PING (prevents Render free tier cold starts) ─────────────
-// Pings the server every 14 minutes so it never spins down due to inactivity
-const SELF_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+// FIX: RENDER_EXTERNAL_URL must be set manually in Render env vars.
+// We now fall back to the PORT-based localhost URL so pings always work.
+const SELF_URL = process.env.RENDER_EXTERNAL_URL
+  ? process.env.RENDER_EXTERNAL_URL.replace(/\/$/, "")
+  : `http://localhost:${PORT}`;
+
 setInterval(async () => {
   try {
     const http = require("http");
