@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SneakerVault — Loading</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0a;
+    color: #f5f4f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    animation: fadeDown 0.8s ease both;
+  }
+  .logo span { color: #e63329; }
+
+  .tagline {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 3.5rem;
+    animation: fadeDown 0.8s 0.15s ease both;
+  }
+
+  /* Animated shoe */
+  .shoe {
+    font-size: clamp(80px, 20vw, 130px);
+    margin-bottom: 2.5rem;
+    display: block;
+    animation: floatShoe 2.5s ease-in-out infinite, fadeDown 0.8s 0.3s ease both;
+    filter: drop-shadow(0 20px 40px rgba(230,51,41,0.25));
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    width: min(320px, 80vw);
+    height: 2px;
+    background: #1a1a1a;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+  .progress-bar {
+    height: 100%;
+    background: #e63329;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .status-msg {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    min-height: 1.4em;
+    animation: fadeUp 0.8s 0.6s ease both;
+    transition: color 0.3s;
+  }
+  .status-msg.ready { color: #22c55e; }
+  .status-msg.error { color: #e63329; }
+
+  .dots span {
+    animation: blink 1.2s infinite;
+    opacity: 0;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Manual button — shown only if it takes too long */
+  .manual-btn {
+    display: none;
+    margin-top: 2rem;
+    padding: 12px 32px;
+    background: transparent;
+    border: 1.5px solid #333;
+    color: #f5f4f0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    animation: fadeUp 0.5s ease both;
+    text-decoration: none;
+  }
+  .manual-btn:hover { background: #e63329; border-color: #e63329; }
+
+  /* Background grid decoration */
+  .bg-text {
+    position: fixed;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 30vw, 280px);
+    color: rgba(255,255,255,0.02);
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    bottom: -2%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  @keyframes floatShoe {
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    50%       { transform: translateY(-18px) rotate(-5deg); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40%           { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-text">VAULT</div>
+
+<span class="shoe">👟</span>
+
+<div class="logo">SNEAKER<span>VAULT</span></div>
+<div class="tagline">Built For Flight</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="status-msg" id="statusMsg">
+  Waking up the server<span class="dots"><span>.</span><span>.</span><span>.</span></span>
+</div>
+
+<a class="manual-btn" id="manualBtn" href="/">Enter Store</a>
+
+<script>
+  const HEALTH_URL = '/health';
+  const STORE_URL  = '/';
+
+  const bar = document.getElementById('progressBar');
+  const msg = document.getElementById('statusMsg');
+  const btn = document.getElementById('manualBtn');
+
+  let attempts  = 0;
+  const MAX     = 45;     // ~90s total — enough for Render cold start + DB connect
+  const DELAY   = 2000;   // poll every 2 seconds
+
+  const STAGES = [
+    { pct: 15,  label: 'Waking up the server' },
+    { pct: 35,  label: 'Connecting to database' },
+    { pct: 55,  label: 'Loading products' },
+    { pct: 75,  label: 'Almost there' },
+    { pct: 90,  label: 'Just a moment' },
+  ];
+
+  function setStage(attempt) {
+    const s = STAGES[Math.min(attempt, STAGES.length - 1)];
+    bar.style.width = s.pct + '%';
+    msg.innerHTML  = s.label + '<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+  }
+
+  async function ping() {
+    attempts++;
+    setStage(Math.floor(attempts / (MAX / STAGES.length)));
+
+    try {
+      const res = await fetch(HEALTH_URL, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        // Only redirect when server explicitly says status: "ok" (DB is ready)
+        if (data.status === 'ok') {
+          bar.style.width      = '100%';
+          bar.style.background = '#22c55e';
+          msg.textContent      = 'Ready! Taking you in…';
+          msg.className        = 'status-msg ready';
+          setTimeout(() => { window.location.replace(STORE_URL); }, 800);
+          return;
+        }
+      }
+    } catch (_) { /* still booting */ }
+
+    if (attempts >= MAX) {
+      msg.textContent = 'Taking longer than usual…';
+      msg.className   = 'status-msg error';
+      btn.style.display = 'inline-block';
+      return; // stop polling, show manual button
+    }
+
+    // Show manual button as a fallback after 40s regardless
+    if (attempts === 20) btn.style.display = 'inline-block';
+
+    setTimeout(ping, DELAY);
+  }
+
+  // Start first ping after a short delay so the animation plays first
+  setTimeout(ping, 800);
+</script>
+</body>
+</html>
