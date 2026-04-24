@@ -1,1393 +1,220 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SneakerVault — Built For Flight</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>SneakerVault — Loading</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --black: #0a0a0a;
-  --white: #f5f4f0;
-  --red: #e63329;
-  --gray: #8a8a8a;
-  --light: #ebebeb;
-  --card: #ffffff;
-  --border: #e0e0e0;
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'Space Mono', monospace;
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0a;
+    color: #f5f4f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--font-body);
-  background: var(--white);
-  color: var(--black);
-  overflow-x: hidden;
-}
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    animation: fadeDown 0.8s ease both;
+  }
+  .logo span { color: #e63329; }
 
-/* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 5%; height: 64px;
-  background: rgba(245,244,240,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 1.8rem;
-  letter-spacing: 0.05em;
-  color: var(--black);
-  text-decoration: none;
-}
-.nav-logo span { color: var(--red); }
-.nav-links { display: flex; gap: 2rem; list-style: none; }
-.nav-links a {
-  font-size: 0.78rem; font-weight: 500; text-transform: uppercase;
-  letter-spacing: 0.12em; color: var(--black); text-decoration: none;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--red); }
-.nav-actions { display: flex; align-items: center; gap: 1rem; }
-.btn-icon {
-  background: none; border: none; cursor: pointer;
-  padding: 6px; position: relative; color: var(--black);
-}
-.btn-icon svg { display: block; }
-.cart-count {
-  position: absolute; top: -2px; right: -2px;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--red); color: white;
-  font-size: 0.6rem; font-weight: 700; font-family: var(--font-mono);
-  display: flex; align-items: center; justify-content: center;
-}
-.btn-nav {
-  padding: 8px 20px; border-radius: 2px; cursor: pointer;
-  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; border: none; transition: all 0.2s;
-}
-.btn-nav-outline {
-  background: transparent; border: 1.5px solid var(--black); color: var(--black);
-}
-.btn-nav-outline:hover { background: var(--black); color: var(--white); }
-.btn-nav-solid { background: var(--black); color: var(--white); }
-.btn-nav-solid:hover { background: var(--red); }
+  .tagline {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 3.5rem;
+    animation: fadeDown 0.8s 0.15s ease both;
+  }
 
-/* HERO */
-.hero {
-  min-height: 100vh; padding-top: 64px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  align-items: center; position: relative; overflow: hidden;
-}
-.hero-left { padding: 0 5%; }
-.hero-tag {
-  font-family: var(--font-mono); font-size: 0.75rem;
-  color: var(--red); letter-spacing: 0.2em; text-transform: uppercase;
-  margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;
-}
-.hero-tag::before { content: ''; width: 30px; height: 1px; background: var(--red); }
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(5rem, 10vw, 9rem);
-  line-height: 0.9; letter-spacing: -0.01em;
-  margin-bottom: 1.5rem;
-}
-.hero-title span { color: var(--red); }
-.hero-subtitle {
-  font-size: 1rem; color: var(--gray); max-width: 340px;
-  line-height: 1.7; margin-bottom: 2.5rem; font-weight: 300;
-}
-.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-.btn-primary {
-  padding: 16px 40px; background: var(--black); color: var(--white);
-  border: none; cursor: pointer; font-family: var(--font-body);
-  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.15em;
-  text-transform: uppercase; transition: all 0.25s;
-}
-.btn-primary:hover { background: var(--red); transform: translateY(-2px); }
-.btn-secondary {
-  padding: 16px 40px; background: transparent; color: var(--black);
-  border: 1.5px solid var(--black); cursor: pointer; font-family: var(--font-body);
-  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.15em;
-  text-transform: uppercase; transition: all 0.25s;
-}
-.btn-secondary:hover { background: var(--black); color: var(--white); }
-.hero-stats {
-  margin-top: 4rem; display: flex; gap: 3rem;
-}
-.stat-item .stat-num {
-  font-family: var(--font-display); font-size: 2.5rem;
-  line-height: 1; color: var(--black);
-}
-.stat-item .stat-label {
-  font-size: 0.72rem; color: var(--gray); letter-spacing: 0.1em;
-  text-transform: uppercase; margin-top: 0.25rem;
-}
-.hero-right {
-  height: 100vh; display: flex; align-items: center; justify-content: center;
-  position: relative; background: var(--light);
-  overflow: hidden;
-}
-.hero-shoe-container {
-  width: 500px; height: 400px;
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-}
-.hero-shoe {
-  font-size: 280px; line-height: 1;
-  filter: drop-shadow(30px 30px 40px rgba(0,0,0,0.15));
-  animation: floatShoe 3s ease-in-out infinite;
-  transform-origin: center;
-}
-@keyframes floatShoe {
-  0%,100% { transform: translateY(0) rotate(-8deg); }
-  50% { transform: translateY(-20px) rotate(-5deg); }
-}
-.hero-bg-text {
-  position: absolute; font-family: var(--font-display);
-  font-size: 220px; color: rgba(0,0,0,0.04); letter-spacing: -0.05em;
-  line-height: 1; pointer-events: none; white-space: nowrap;
-  bottom: 10%;
-}
+  /* Animated shoe */
+  .shoe {
+    font-size: clamp(80px, 20vw, 130px);
+    margin-bottom: 2.5rem;
+    display: block;
+    animation: floatShoe 2.5s ease-in-out infinite, fadeDown 0.8s 0.3s ease both;
+    filter: drop-shadow(0 20px 40px rgba(230,51,41,0.25));
+  }
 
-/* MARQUEE */
-.marquee-bar {
-  background: var(--black); color: var(--white); overflow: hidden;
-  padding: 12px 0; border-top: 1px solid #333; border-bottom: 1px solid #333;
-}
-.marquee-track {
-  display: flex; gap: 0; white-space: nowrap;
-  animation: marquee 20s linear infinite;
-}
-.marquee-item {
-  font-family: var(--font-display); font-size: 1rem; letter-spacing: 0.2em;
-  padding: 0 2rem; flex-shrink: 0;
-}
-.marquee-dot { color: var(--red); margin: 0 0.5rem; }
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
+  /* Progress bar */
+  .progress-wrap {
+    width: min(320px, 80vw);
+    height: 2px;
+    background: #1a1a1a;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+  .progress-bar {
+    height: 100%;
+    background: #e63329;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
 
-/* SECTIONS */
-section { padding: 80px 5%; }
-.section-label {
-  font-family: var(--font-mono); font-size: 0.7rem;
-  color: var(--red); letter-spacing: 0.25em; text-transform: uppercase;
-  margin-bottom: 0.75rem;
-}
-.section-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem); line-height: 0.95;
-  margin-bottom: 3rem;
-}
+  .status-msg {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    min-height: 1.4em;
+    animation: fadeUp 0.8s 0.6s ease both;
+    transition: color 0.3s;
+  }
+  .status-msg.ready { color: #22c55e; }
+  .status-msg.error { color: #e63329; }
 
-/* CATEGORY CARDS */
-.category-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-  margin-bottom: 0;
-}
-.cat-card {
-  position: relative; height: 260px; overflow: hidden;
-  background: var(--black); cursor: pointer;
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: 2rem; text-decoration: none;
-  transition: transform 0.3s;
-}
-.cat-card:hover { transform: scale(1.01); }
-.cat-card:hover .cat-arrow { transform: translateX(8px); }
-.cat-name {
-  font-family: var(--font-display); font-size: 3rem;
-  color: white; letter-spacing: 0.05em;
-}
-.cat-footer { display: flex; align-items: center; gap: 0.75rem; }
-.cat-link {
-  font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.7);
-  letter-spacing: 0.1em; text-transform: uppercase;
-}
-.cat-arrow {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--red); display: flex; align-items: center; justify-content: center;
-  transition: transform 0.3s;
-}
-.cat-card.women { background: linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 100%); }
-.cat-card.men { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%); }
+  .dots span {
+    animation: blink 1.2s infinite;
+    opacity: 0;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
 
-/* PRODUCTS */
-.products-header {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  margin-bottom: 2rem;
-}
-.view-all {
-  font-size: 0.78rem; font-weight: 600; color: var(--gray);
-  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
-  text-decoration: none; border-bottom: 1px solid transparent;
-  transition: all 0.2s;
-}
-.view-all:hover { color: var(--black); border-bottom-color: var(--black); }
-.products-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-}
-.product-card {
-  cursor: pointer; transition: transform 0.3s;
-  background: var(--card); position: relative;
-}
-.product-card:hover { transform: translateY(-4px); }
-.product-card:hover .add-to-cart { opacity: 1; transform: translateY(0); }
-.product-img {
-  height: 220px; background: var(--light);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; position: relative; font-size: 80px;
-}
-.product-img img { width: 100%; height: 100%; object-fit: cover; }
-.product-badge {
-  position: absolute; top: 12px; left: 12px;
-  background: var(--red); color: white;
-  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em;
-  text-transform: uppercase; padding: 3px 8px;
-}
-.product-wishlist {
-  position: absolute; top: 10px; right: 10px;
-  background: white; border: none; border-radius: 50%;
-  width: 32px; height: 32px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;
-  opacity: 0;
-}
-.product-card:hover .product-wishlist { opacity: 1; }
-.product-wishlist.active { background: var(--red); color: white; }
-.add-to-cart {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: var(--black); color: white;
-  border: none; padding: 10px; cursor: pointer;
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em;
-  text-transform: uppercase; opacity: 0; transform: translateY(4px);
-  transition: all 0.25s; font-family: var(--font-body);
-}
-.add-to-cart:hover { background: var(--red); }
-.product-info { padding: 1rem; }
-.product-brand {
-  font-size: 0.68rem; color: var(--gray); text-transform: uppercase;
-  letter-spacing: 0.12em; margin-bottom: 0.25rem;
-}
-.product-name {
-  font-size: 0.88rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--black);
-}
-.product-price { display: flex; gap: 0.5rem; align-items: center; }
-.price-current {
-  font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700;
-}
-.price-original {
-  font-size: 0.78rem; color: var(--gray); text-decoration: line-through;
-  font-family: var(--font-mono);
-}
+  /* Manual button — shown only if it takes too long */
+  .manual-btn {
+    display: none;
+    margin-top: 2rem;
+    padding: 12px 32px;
+    background: transparent;
+    border: 1.5px solid #333;
+    color: #f5f4f0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    animation: fadeUp 0.5s ease both;
+    text-decoration: none;
+  }
+  .manual-btn:hover { background: #e63329; border-color: #e63329; }
 
-/* FILTERS */
-.filters-bar {
-  display: flex; gap: 0.75rem; align-items: center;
-  margin-bottom: 2rem; flex-wrap: wrap;
-}
-.filter-btn {
-  padding: 8px 18px; border: 1.5px solid var(--border);
-  background: transparent; cursor: pointer; border-radius: 2px;
-  font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
-  text-transform: uppercase; font-family: var(--font-body);
-  transition: all 0.2s; color: var(--gray);
-}
-.filter-btn:hover, .filter-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
-.filter-select {
-  padding: 8px 32px 8px 14px; border: 1.5px solid var(--border);
-  background: transparent; cursor: pointer; border-radius: 2px;
-  font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
-  font-family: var(--font-body); color: var(--black); appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a0a0a' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
-}
+  /* Background grid decoration */
+  .bg-text {
+    position: fixed;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 30vw, 280px);
+    color: rgba(255,255,255,0.02);
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    bottom: -2%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    user-select: none;
+  }
 
-/* NEWSLETTER */
-.newsletter {
-  background: var(--black); color: var(--white); text-align: center;
-  padding: 100px 5%;
-}
-.newsletter .section-title { color: var(--white); }
-.newsletter p { color: rgba(255,255,255,0.5); margin-bottom: 2.5rem; max-width: 440px; margin-left: auto; margin-right: auto; }
-.newsletter-form { display: flex; gap: 0; max-width: 480px; margin: 0 auto; }
-.newsletter-input {
-  flex: 1; padding: 16px 20px; background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15); color: white; outline: none;
-  font-family: var(--font-body); font-size: 0.88rem;
-  border-right: none;
-}
-.newsletter-input::placeholder { color: rgba(255,255,255,0.3); }
-.newsletter-btn {
-  padding: 16px 28px; background: var(--red); color: white;
-  border: none; cursor: pointer; font-family: var(--font-body);
-  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; transition: background 0.2s;
-}
-.newsletter-btn:hover { background: #c0271e; }
-
-/* FOOTER */
-footer {
-  background: var(--black); color: var(--white);
-  padding: 60px 5% 30px;
-  border-top: 1px solid #1a1a1a;
-}
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
-.footer-logo { font-family: var(--font-display); font-size: 2rem; margin-bottom: 1rem; }
-.footer-logo span { color: var(--red); }
-.footer-tagline { color: rgba(255,255,255,0.4); font-size: 0.85rem; line-height: 1.7; }
-.footer-col h4 { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 1.25rem; }
-.footer-col ul { list-style: none; }
-.footer-col li { margin-bottom: 0.6rem; }
-.footer-col a { color: rgba(255,255,255,0.6); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
-.footer-col a:hover { color: white; }
-.footer-bottom { border-top: 1px solid #1a1a1a; padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-.footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
-
-/* MODAL */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-  z-index: 2000; display: flex; align-items: center; justify-content: center;
-  padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-  backdrop-filter: blur(4px);
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--white); max-width: 460px; width: 100%;
-  padding: 3rem; position: relative;
-  transform: translateY(20px); transition: transform 0.3s;
-}
-.modal-overlay.open .modal { transform: translateY(0); }
-.modal-close {
-  position: absolute; top: 1rem; right: 1rem;
-  background: none; border: none; cursor: pointer; font-size: 1.4rem;
-  color: var(--gray); transition: color 0.2s;
-}
-.modal-close:hover { color: var(--black); }
-.modal-title { font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 0.5rem; }
-.modal-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 2rem; }
-.form-group { margin-bottom: 1rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.form-group label {
-  display: block; font-size: 0.72rem; font-weight: 600;
-  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem;
-}
-.form-group input {
-  width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
-  background: transparent; font-family: var(--font-body); font-size: 0.9rem;
-  outline: none; transition: border-color 0.2s;
-}
-.form-group input:focus { border-color: var(--black); }
-.btn-submit {
-  width: 100%; padding: 14px; background: var(--black); color: white;
-  border: none; cursor: pointer; font-family: var(--font-body);
-  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; margin-top: 1rem; transition: background 0.2s;
-}
-.btn-submit:hover { background: var(--red); }
-.modal-switch { margin-top: 1.25rem; text-align: center; font-size: 0.85rem; color: var(--gray); }
-.modal-switch a { color: var(--black); font-weight: 600; cursor: pointer; }
-.form-error { color: var(--red); font-size: 0.8rem; margin-top: 0.5rem; min-height: 1.2em; }
-
-/* CART DRAWER */
-.cart-drawer {
-  position: fixed; right: 0; top: 0; bottom: 0; width: 420px;
-  background: var(--white); z-index: 3000; padding: 2rem;
-  transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  box-shadow: -4px 0 30px rgba(0,0,0,0.15); overflow-y: auto;
-}
-.cart-drawer.open { transform: translateX(0); }
-.cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-.cart-title { font-family: var(--font-display); font-size: 2rem; }
-.cart-items { flex: 1; }
-.cart-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); }
-.cart-item-img { width: 80px; height: 80px; background: var(--light); display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0; overflow: hidden; }
-.cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
-.cart-item-info { flex: 1; }
-.cart-item-name { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem; }
-.cart-item-meta { font-size: 0.75rem; color: var(--gray); margin-bottom: 0.5rem; }
-.cart-item-price { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; }
-.cart-item-qty { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
-.qty-btn { width: 24px; height: 24px; border: 1px solid var(--border); background: none; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-.qty-btn:hover { background: var(--black); color: white; border-color: var(--black); }
-.qty-num { font-family: var(--font-mono); font-size: 0.85rem; width: 24px; text-align: center; }
-.cart-remove { background: none; border: none; color: var(--gray); cursor: pointer; font-size: 0.75rem; margin-left: auto; align-self: flex-start; }
-.cart-footer { border-top: 2px solid var(--black); padding-top: 1.5rem; margin-top: 1rem; }
-.cart-total { display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
-.cart-total span:first-child { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); }
-.cart-total span:last-child { font-family: var(--font-mono); font-weight: 700; font-size: 1.1rem; }
-.checkout-btn { width: 100%; padding: 16px; background: var(--black); color: white; border: none; cursor: pointer; font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; transition: background 0.2s; margin-top: 0.75rem; }
-.checkout-btn:hover { background: var(--red); }
-.cart-empty { text-align: center; padding: 3rem 1rem; }
-.cart-empty-icon { font-size: 4rem; margin-bottom: 1rem; }
-.cart-empty p { color: var(--gray); font-size: 0.9rem; }
-
-/* PRODUCT DETAIL MODAL */
-.detail-modal { max-width: 800px; display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0; overflow: hidden; }
-.detail-img { background: var(--light); display: flex; align-items: center; justify-content: center; min-height: 400px; font-size: 120px; overflow: hidden; }
-.detail-img img { width: 100%; height: 100%; object-fit: cover; }
-.detail-info { padding: 2.5rem; overflow-y: auto; max-height: 600px; }
-.detail-brand { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--red); margin-bottom: 0.5rem; }
-.detail-name { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; margin-bottom: 0.75rem; }
-.detail-price { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 700; margin-bottom: 1.25rem; }
-.detail-desc { font-size: 0.88rem; color: var(--gray); line-height: 1.8; margin-bottom: 1.5rem; }
-.detail-section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.75rem; }
-.size-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-.size-btn { padding: 8px 12px; border: 1.5px solid var(--border); background: none; cursor: pointer; font-family: var(--font-mono); font-size: 0.78rem; transition: all 0.15s; }
-.size-btn:hover { border-color: var(--black); }
-.size-btn.selected { background: var(--black); color: white; border-color: var(--black); }
-.size-btn.out { opacity: 0.3; cursor: not-allowed; }
-
-/* TOAST */
-.toast {
-  position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
-  background: var(--black); color: white;
-  padding: 12px 20px; font-size: 0.85rem; font-weight: 500;
-  border-left: 3px solid var(--red);
-  transform: translateX(120%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  max-width: 320px;
-}
-.toast.show { transform: translateX(0); }
-
-/* SEARCH BAR */
-.search-overlay {
-  position: fixed; inset: 0; background: rgba(245,244,240,0.97);
-  z-index: 2500; display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-start; padding-top: 120px;
-  opacity: 0; pointer-events: none; transition: opacity 0.25s;
-}
-.search-overlay.open { opacity: 1; pointer-events: all; }
-.search-input-wrapper { position: relative; width: 100%; max-width: 700px; padding: 0 2rem; margin-bottom: 3rem; }
-.search-big-input {
-  width: 100%; font-family: var(--font-display); font-size: 3rem;
-  background: none; border: none; border-bottom: 3px solid var(--black);
-  outline: none; padding: 0.5rem 0; color: var(--black);
-}
-.search-big-input::placeholder { color: var(--border); }
-.search-results-grid { width: 100%; max-width: 700px; padding: 0 2rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-.search-close { position: fixed; top: 1.5rem; right: 2rem; background: none; border: none; cursor: pointer; font-size: 2rem; color: var(--black); }
-
-/* USER MENU */
-.user-menu-dropdown {
-  position: absolute; top: 100%; right: 0;
-  background: var(--white); border: 1px solid var(--border);
-  min-width: 180px; padding: 0.5rem 0;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  opacity: 0; pointer-events: none; transition: opacity 0.2s;
-  z-index: 100;
-}
-.user-menu-wrapper { position: relative; }
-.user-menu-wrapper:hover .user-menu-dropdown { opacity: 1; pointer-events: all; }
-.user-menu-item {
-  display: block; padding: 10px 20px;
-  font-size: 0.83rem; color: var(--black); text-decoration: none;
-  cursor: pointer; transition: background 0.15s; border: none; background: none; width: 100%; text-align: left; font-family: var(--font-body);
-}
-.user-menu-item:hover { background: var(--light); }
-.user-menu-divider { height: 1px; background: var(--border); margin: 0.25rem 0; }
-
-/* ANIMATIONS */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-up { animation: fadeUp 0.6s ease forwards; }
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
-.delay-3 { animation-delay: 0.3s; }
-.delay-4 { animation-delay: 0.4s; }
-
-@media (max-width: 1024px) {
-  .products-grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 768px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero-right { display: none; }
-  .products-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .detail-modal { grid-template-columns: 1fr; }
-  nav { padding: 0 4%; }
-  .nav-links { display: none; }
-  .cart-drawer { width: 100%; }
-}
+  @keyframes floatShoe {
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    50%       { transform: translateY(-18px) rotate(-5deg); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40%           { opacity: 1; }
+  }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="/" class="nav-logo">SNEAKER<span>VAULT</span></a>
-  <ul class="nav-links">
-    <li><a href="#" onclick="filterCategory('men')">Men</a></li>
-    <li><a href="#" onclick="filterCategory('women')">Women</a></li>
-    <li><a href="#" onclick="scrollToProducts()">New Releases</a></li>
-    <li><a href="#" onclick="filterCategory('unisex')">Unisex</a></li>
-  </ul>
-  <div class="nav-actions">
-    <button class="btn-icon" onclick="openSearch()" title="Search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    </button>
-    <div class="user-menu-wrapper" id="userMenuWrapper">
-      <button class="btn-icon" id="userBtn" onclick="handleUserBtnClick()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </button>
-      <div class="user-menu-dropdown" id="userDropdown"></div>
-    </div>
-    <button class="btn-icon" onclick="toggleCart()" style="position:relative">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span class="cart-count" id="cartCount" style="display:none">0</span>
-    </button>
-  </div>
-</nav>
+<div class="bg-text">VAULT</div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <div class="hero-tag fade-up">New Collection 2026</div>
-    <h1 class="hero-title fade-up delay-1">BUILT<br>FOR<br><span>FLIGHT</span></h1>
-    <p class="hero-subtitle fade-up delay-2">Lightweight sneakers engineered for every step. Premium soles that elevate your game.</p>
-    <div class="hero-actions fade-up delay-3">
-      <button class="btn-primary" onclick="scrollToProducts()">Shop Now</button>
-      <button class="btn-secondary" onclick="filterCategory('new');scrollToProducts()">New Releases</button>
-    </div>
-    <div class="hero-stats fade-up delay-4">
-      <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Styles</div></div>
-      <div class="stat-item"><div class="stat-num">12K+</div><div class="stat-label">Customers</div></div>
-      <div class="stat-item"><div class="stat-num">24H</div><div class="stat-label">Delivery</div></div>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-shoe-container">
-      <div class="hero-shoe">👟</div>
-      <div class="hero-bg-text">VAULT</div>
-    </div>
-  </div>
-</section>
+<span class="shoe">👟</span>
 
-<!-- MARQUEE -->
-<div class="marquee-bar">
-  <div class="marquee-track" id="marqueeTrack">
-    <span class="marquee-item">Nike Air Max <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Jordan 4 <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">New Balance <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Adidas Originals <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Reebok Classic <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Nike Dunk Low <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Air Jordan <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">SneakerVault Exclusive <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Nike Air Max <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Jordan 4 <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">New Balance <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Adidas Originals <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Reebok Classic <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Nike Dunk Low <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">Air Jordan <span class="marquee-dot">✦</span></span>
-    <span class="marquee-item">SneakerVault Exclusive <span class="marquee-dot">✦</span></span>
-  </div>
+<div class="logo">SNEAKER<span>VAULT</span></div>
+<div class="tagline">Built For Flight</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar" id="progressBar"></div>
 </div>
 
-<!-- SHOP BY CATEGORY -->
-<section>
-  <div class="section-label">Shop By</div>
-  <div class="products-header">
-    <h2 class="section-title" style="margin-bottom:0">CATEGORY</h2>
-  </div>
-  <div class="category-grid">
-    <div class="cat-card women" onclick="filterCategory('women')">
-      <div class="cat-name">Women</div>
-      <div class="cat-footer">
-        <span class="cat-link">Shop Now</span>
-        <div class="cat-arrow">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </div>
-    <div class="cat-card men" onclick="filterCategory('men')">
-      <div class="cat-name">Men</div>
-      <div class="cat-footer">
-        <span class="cat-link">Shop Now</span>
-        <div class="cat-arrow">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRODUCTS -->
-<section id="products-section">
-  <div class="section-label" id="productsLabel">New Releases</div>
-  <div class="products-header">
-    <h2 class="section-title" id="productsTitle" style="margin-bottom:0">FRESH DROPS</h2>
-    <a class="view-all" onclick="showAllProducts()">View All →</a>
-  </div>
-
-  <div class="filters-bar">
-    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-    <button class="filter-btn" onclick="setFilter('men', this)">Men</button>
-    <button class="filter-btn" onclick="setFilter('women', this)">Women</button>
-    <button class="filter-btn" onclick="setFilter('unisex', this)">Unisex</button>
-    <select class="filter-select" id="sortSelect" onchange="setSortOrder(this.value)">
-      <option value="">Sort: Default</option>
-      <option value="price_asc">Price: Low to High</option>
-      <option value="price_desc">Price: High to Low</option>
-      <option value="newest">Newest First</option>
-    </select>
-  </div>
-
-  <div class="products-grid" id="productsGrid">
-    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray)">Loading products...</div>
-  </div>
-</section>
-
-<!-- NEWSLETTER -->
-<section class="newsletter">
-  <div class="section-label" style="color:rgba(255,255,255,0.4)">Stay Updated</div>
-  <h2 class="section-title">NEVER MISS<br>A DROP</h2>
-  <p>Stay updated on new releases, exclusive offers, and promotions.</p>
-  <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
-    <input type="email" class="newsletter-input" placeholder="Your email address" id="newsletterEmail" required>
-    <button type="submit" class="newsletter-btn">Join Mailing List</button>
-  </form>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-logo">SNEAKER<span>VAULT</span></div>
-      <p class="footer-tagline">Premium sneakers for those who know. Built for flight, designed for life.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Shop</h4>
-      <ul>
-        <li><a href="#" onclick="filterCategory('men')">Men's</a></li>
-        <li><a href="#" onclick="filterCategory('women')">Women's</a></li>
-        <li><a href="#" onclick="showAllProducts()">New Releases</a></li>
-        <li><a href="#" onclick="filterCategory('unisex')">Unisex</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Help</h4>
-      <ul>
-        <li><a href="#">Size Guide</a></li>
-        <li><a href="#">Returns</a></li>
-        <li><a href="#">Shipping</a></li>
-        <li><a href="#">Contact Us</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Account</h4>
-      <ul>
-        <li><a href="#" onclick="openLogin()">Sign In</a></li>
-        <li><a href="#" onclick="openRegister()">Create Account</a></li>
-        <li><a href="#" onclick="viewOrders()">My Orders</a></li>
-        <li><a href="#" onclick="viewWishlist()">Wishlist</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 SneakerVault. All rights reserved.</p>
-    <p>Privacy Policy · Terms of Service</p>
-  </div>
-</footer>
-
-<!-- AUTH MODAL -->
-<div class="modal-overlay" id="authModal">
-  <div class="modal" id="authModalContent">
-    <!-- Filled by JS -->
-  </div>
+<div class="status-msg" id="statusMsg">
+  Waking up the server<span class="dots"><span>.</span><span>.</span><span>.</span></span>
 </div>
 
-<!-- PRODUCT DETAIL MODAL -->
-<div class="modal-overlay" id="detailModal">
-  <div class="modal detail-modal" id="detailContent">
-    <!-- Filled by JS -->
-  </div>
-</div>
-
-<!-- CART DRAWER -->
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-header">
-    <h2 class="cart-title">YOUR BAG</h2>
-    <button class="btn-icon" onclick="toggleCart()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div id="cartItems"></div>
-</div>
-<div id="cartBackdrop" style="display:none;position:fixed;inset:0;z-index:2999;background:rgba(0,0,0,0.3)" onclick="toggleCart()"></div>
-
-<!-- SEARCH OVERLAY -->
-<div class="search-overlay" id="searchOverlay">
-  <button class="search-close" onclick="closeSearch()">✕</button>
-  <div class="search-input-wrapper">
-    <input type="text" class="search-big-input" id="searchInput" placeholder="Search sneakers..." oninput="performSearch(this.value)">
-  </div>
-  <div class="search-results-grid" id="searchResults"></div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<a class="manual-btn" id="manualBtn" href="/">Enter Store</a>
 
 <script>
-// ─── STATE ────────────────────────────────────────────────────────────────
-let cart = JSON.parse(localStorage.getItem('sv_cart') || '[]');
-let wishlist = JSON.parse(localStorage.getItem('sv_wishlist') || '[]');
-let authToken = localStorage.getItem('sv_token');
-let currentUser = JSON.parse(localStorage.getItem('sv_user') || 'null');
-let allProducts = [];
-let currentFilter = 'all';
-let currentSort = '';
-const API = 'https://sneakervault-yul3.onrender.com';
+  const HEALTH_URL = '/health';
+  const STORE_URL  = '/';
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  updateCartUI();
-  updateUserMenu();
-  loadProducts();
-  if (authToken) fetchCurrentUser();
-});
+  const bar    = document.getElementById('progressBar');
+  const msg    = document.getElementById('statusMsg');
+  const btn    = document.getElementById('manualBtn');
 
-// ─── API HELPER ────────────────────────────────────────────────────────────
-async function api(path, opts = {}) {
-  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
-  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
-  const res = await fetch(API + path, { ...opts, headers });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Request failed');
-  return data;
-}
+  let attempts  = 0;
+  const MAX     = 30;          // give up showing spinner after ~60s
+  const DELAY   = 2000;        // poll every 2 seconds
 
-// ─── FETCH CURRENT USER ────────────────────────────────────────────────────
-async function fetchCurrentUser() {
-  try {
-    const data = await api('/api/auth/me');
-    currentUser = data.user;
-    localStorage.setItem('sv_user', JSON.stringify(currentUser));
-    updateUserMenu();
-    if (currentUser.wishlist && currentUser.wishlist.length) {
-      wishlist = currentUser.wishlist;
-      localStorage.setItem('sv_wishlist', JSON.stringify(wishlist));
-    }
-  } catch(e) {
-    // Token expired or invalid — clear auth
-    authToken = null; currentUser = null;
-    localStorage.removeItem('sv_token');
-    localStorage.removeItem('sv_user');
-    updateUserMenu();
+  // Animate bar to show "something is happening"
+  const STAGES = [
+    { pct: 15,  label: 'Waking up the server' },
+    { pct: 35,  label: 'Connecting to database' },
+    { pct: 55,  label: 'Loading products' },
+    { pct: 75,  label: 'Almost there' },
+    { pct: 90,  label: 'Just a moment' },
+  ];
+
+  function setStage(attempt) {
+    const s = STAGES[Math.min(attempt, STAGES.length - 1)];
+    bar.style.width = s.pct + '%';
+    msg.innerHTML  = s.label + '<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
   }
-}
 
-// ─── PRODUCTS ─────────────────────────────────────────────────────────────
-async function loadProducts(filters = {}, attempt = 1) {
-  try {
-    const params = new URLSearchParams(filters);
-    const data = await api(`/api/products?${params}`);
-    allProducts = data.products || [];
-    renderProducts(allProducts);
-  } catch(e) {
-    console.error('loadProducts error:', e);
-    if (attempt < 3) {
-      document.getElementById('productsGrid').innerHTML =
-        `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray)">
-          Connecting to server... (attempt ${attempt}/3)
-        </div>`;
-      setTimeout(() => loadProducts(filters, attempt + 1), 1500);
-    } else {
-      document.getElementById('productsGrid').innerHTML =
-        `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray)">
-          <strong>Failed to load products.</strong><br>
-          Make sure the server is running: <code>node server.js</code><br>
-          <small style="color:#aaa">Error: ${e.message}</small><br><br>
-          <button onclick="loadProducts()" style="margin-top:0.5rem;padding:8px 20px;cursor:pointer;border:1.5px solid #ccc;background:none;font-family:inherit">
-            Retry
-          </button>
-        </div>`;
-    }
-  }
-}
+  async function ping() {
+    attempts++;
+    setStage(Math.floor(attempts / (MAX / STAGES.length)));
 
-function renderProducts(products) {
-  const grid = document.getElementById('productsGrid');
-  if (!products || !products.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray)">No products found.</div>`;
-    return;
-  }
-  grid.innerHTML = products.map(p => {
-    // p.id is a string (set by server as _id.toString())
-    const inWishlist = wishlist.includes(p.id);
-    const discount = p.originalPrice > p.price ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
-    const imgContent = p.image
-      ? `<img src="${API}${p.image}" alt="${p.name}" onerror="this.parentNode.innerHTML='👟'">`
-      : '👟';
-    return `
-    <div class="product-card" onclick="openDetail('${p.id}')">
-      <div class="product-img">
-        ${imgContent}
-        ${discount > 0
-          ? `<div class="product-badge">-${discount}%</div>`
-          : p.newRelease
-            ? `<div class="product-badge" style="background:var(--black)">New</div>`
-            : ''}
-        <button class="product-wishlist ${inWishlist ? 'active' : ''}"
-          onclick="event.stopPropagation();toggleWishlist('${p.id}', this)" title="Wishlist">
-          <svg width="14" height="14" viewBox="0 0 24 24"
-            fill="${inWishlist ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-        </button>
-        <button class="add-to-cart" onclick="event.stopPropagation();quickAddToCart('${p.id}')">+ Add to Bag</button>
-      </div>
-      <div class="product-info">
-        <div class="product-brand">${p.brand}</div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-price">
-          <span class="price-current">USD $${p.price}</span>
-          ${p.originalPrice > p.price ? `<span class="price-original">USD $${p.originalPrice}</span>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function setFilter(filter, btn) {
-  currentFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  applyFilters();
-}
-
-function setSortOrder(val) {
-  currentSort = val;
-  applyFilters();
-}
-
-function applyFilters() {
-  const params = {};
-  if (currentFilter !== 'all') params.category = currentFilter;
-  if (currentSort) params.sort = currentSort;
-  loadProducts(params);
-}
-
-function filterCategory(cat) {
-  document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => {
-    const filterMap = { men: 'Men', women: 'Women', unisex: 'Unisex', all: 'All', new: 'All' };
-    const label = filterMap[cat] || 'All';
-    document.querySelectorAll('.filter-btn').forEach(b => {
-      b.classList.toggle('active', b.textContent.trim() === label);
-    });
-    currentFilter = (cat === 'new') ? 'all' : cat;
-    const params = {};
-    if (currentFilter !== 'all') params.category = currentFilter;
-    if (cat === 'new') params.newRelease = true;
-    loadProducts(params);
-  }, 400);
-}
-
-function scrollToProducts() {
-  document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
-}
-
-function showAllProducts() {
-  loadProducts({});
-  currentFilter = 'all';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
-  scrollToProducts();
-}
-
-// ─── PRODUCT DETAIL ────────────────────────────────────────────────────────
-async function openDetail(id) {
-  try {
-    const data = await api(`/api/products/${id}`);
-    const p = data.product;
-    const imgContent = p.image
-      ? `<img src="${API}${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">`
-      : '👟';
-    window._detailSelectedSize = p.sizes?.[0] || 'OS';
-
-    document.getElementById('detailContent').innerHTML = `
-      <div class="detail-img">${imgContent}</div>
-      <div class="detail-info">
-        <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
-        <div class="detail-brand">${p.brand}</div>
-        <div class="detail-name">${p.name}</div>
-        <div class="detail-price">
-          USD $${p.price}
-          ${p.originalPrice > p.price
-            ? `<span style="font-size:0.9rem;color:var(--gray);text-decoration:line-through;margin-left:0.5rem">$${p.originalPrice}</span>`
-            : ''}
-        </div>
-        <p class="detail-desc">${p.description || 'Premium sneaker from ' + p.brand}</p>
-        ${p.sizes && p.sizes.length ? `
-          <div class="detail-section-label">Select Size</div>
-          <div class="size-grid" id="sizeGrid">
-            ${p.sizes.map(s => `
-              <button class="size-btn ${s === window._detailSelectedSize ? 'selected' : ''}"
-                onclick="selectSize('${s}', this)">${s}
-              </button>`).join('')}
-          </div>` : ''}
-        <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
-          <button class="btn-primary" style="flex:1"
-            onclick="addToCartFromDetail('${p.id}','${p.name.replace(/'/g,"\\'")}',${p.price},'${p.image||''}')">
-            Add to Bag
-          </button>
-          <button class="btn-icon" style="border:1.5px solid var(--border);padding:12px"
-            onclick="toggleWishlist('${p.id}', this)" title="Wishlist">
-            <svg width="18" height="18" viewBox="0 0 24 24"
-              fill="${wishlist.includes(p.id) ? 'red' : 'none'}"
-              stroke="${wishlist.includes(p.id) ? 'red' : 'currentColor'}" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </button>
-        </div>
-        <div style="font-size:0.78rem;color:var(--gray)">
-          Stock: ${p.stock} pairs · Free shipping on orders over USD $150
-        </div>
-      </div>`;
-    openModal('detailModal');
-  } catch(e) {
-    showToast('Failed to load product details');
-  }
-}
-
-function selectSize(size, btn) {
-  document.querySelectorAll('#sizeGrid .size-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  window._detailSelectedSize = size;
-}
-
-function addToCartFromDetail(id, name, price, image) {
-  const size = window._detailSelectedSize || 'OS';
-  addToCart(id, name, price, image, size);
-  closeModal('detailModal');
-}
-
-// ─── CART ─────────────────────────────────────────────────────────────────
-function quickAddToCart(id) {
-  const p = allProducts.find(p => p.id === id);
-  if (!p) return;
-  addToCart(p.id, p.name, p.price, p.image, p.sizes?.[0] || 'OS');
-}
-
-function addToCart(id, name, price, image, size) {
-  const key = `${id}_${size}`;
-  const existing = cart.find(i => i.key === key);
-  if (existing) existing.qty++;
-  else cart.push({ key, id, name, price, image, size, qty: 1 });
-  saveCart();
-  updateCartUI();
-  showToast(`${name} added to bag 👟`);
-}
-
-function saveCart() { localStorage.setItem('sv_cart', JSON.stringify(cart)); }
-
-function updateCartUI() {
-  const count = cart.reduce((s, i) => s + i.qty, 0);
-  const el = document.getElementById('cartCount');
-  if (count > 0) { el.style.display = 'flex'; el.textContent = count; }
-  else el.style.display = 'none';
-  renderCart();
-}
-
-function renderCart() {
-  const container = document.getElementById('cartItems');
-  if (!container) return;
-  if (!cart.length) {
-    container.innerHTML = `
-      <div class="cart-empty">
-        <div class="cart-empty-icon">👟</div>
-        <p>Your bag is empty</p>
-        <button class="btn-primary" style="margin-top:1rem" onclick="toggleCart()">Continue Shopping</button>
-      </div>`;
-    return;
-  }
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = total >= 150 ? 0 : 15;
-  container.innerHTML = `
-    <div class="cart-items">
-      ${cart.map(item => {
-        const imgHtml = item.image
-          ? `<img src="${API}${item.image}" alt="${item.name}" onerror="this.parentNode.innerHTML='👟'" style="width:100%;height:100%;object-fit:cover">`
-          : '👟';
-        return `<div class="cart-item">
-          <div class="cart-item-img">${imgHtml}</div>
-          <div class="cart-item-info">
-            <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-meta">Size: ${item.size}</div>
-            <div class="cart-item-price">USD $${(item.price * item.qty).toFixed(2)}</div>
-            <div class="cart-item-qty">
-              <button class="qty-btn" onclick="changeQty('${item.key}',-1)">−</button>
-              <span class="qty-num">${item.qty}</span>
-              <button class="qty-btn" onclick="changeQty('${item.key}',1)">+</button>
-            </div>
-          </div>
-          <button class="cart-remove" onclick="removeFromCart('${item.key}')">✕</button>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="cart-footer">
-      <div class="cart-total"><span>Subtotal</span><span>USD $${total.toFixed(2)}</span></div>
-      <div class="cart-total"><span>Shipping</span><span>${shipping === 0 ? 'FREE' : 'USD $' + shipping}</span></div>
-      <div class="cart-total" style="border-top:1px solid var(--border);padding-top:0.75rem;margin-top:0.5rem">
-        <span style="font-weight:700;font-size:0.9rem">Total</span>
-        <span style="font-size:1.2rem">USD $${(total + shipping).toFixed(2)}</span>
-      </div>
-      <button class="checkout-btn" onclick="checkout()">Checkout →</button>
-    </div>`;
-}
-
-function changeQty(key, delta) {
-  const idx = cart.findIndex(i => i.key === key);
-  if (idx === -1) return;
-  cart[idx].qty += delta;
-  if (cart[idx].qty <= 0) cart.splice(idx, 1);
-  saveCart(); updateCartUI();
-}
-
-function removeFromCart(key) {
-  cart = cart.filter(i => i.key !== key);
-  saveCart(); updateCartUI();
-}
-
-function toggleCart() {
-  const drawer = document.getElementById('cartDrawer');
-  const backdrop = document.getElementById('cartBackdrop');
-  const open = drawer.classList.toggle('open');
-  backdrop.style.display = open ? 'block' : 'none';
-}
-
-async function checkout() {
-  if (!currentUser) { toggleCart(); openLogin(); return; }
-  if (!cart.length) return;
-  try {
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    await api('/api/orders', {
-      method: 'POST',
-      body: JSON.stringify({
-        items: cart,
-        total: total + (total >= 150 ? 0 : 15),
-        shippingAddress: {
-          name: (currentUser.firstName || '') + ' ' + (currentUser.lastName || '')
-        },
-        paymentMethod: 'card'
-      })
-    });
-    cart = [];
-    saveCart(); updateCartUI(); toggleCart();
-    showToast('Order placed successfully! 🎉');
-  } catch(e) {
-    showToast('Checkout failed. Please try again.');
-  }
-}
-
-// ─── WISHLIST ──────────────────────────────────────────────────────────────
-async function toggleWishlist(id, btn) {
-  if (!currentUser) { openLogin(); return; }
-  try {
-    // Optimistic UI
-    const wasIn = wishlist.includes(id);
-    if (wasIn) wishlist = wishlist.filter(w => w !== id);
-    else wishlist.push(id);
-    localStorage.setItem('sv_wishlist', JSON.stringify(wishlist));
-
-    // Update button appearance immediately
-    if (btn) {
-      btn.classList.toggle('active', !wasIn);
-      const svg = btn.querySelector('svg');
-      if (svg) svg.setAttribute('fill', !wasIn ? 'currentColor' : 'none');
-    }
-
-    // Sync with server
-    const data = await api('/api/wishlist', {
-      method: 'POST',
-      body: JSON.stringify({ productId: id })
-    });
-    wishlist = data.wishlist;
-    localStorage.setItem('sv_wishlist', JSON.stringify(wishlist));
-
-    const inList = wishlist.includes(id);
-    showToast(inList ? 'Added to wishlist ❤️' : 'Removed from wishlist');
-    renderProducts(allProducts);
-  } catch(e) {
-    showToast('Failed to update wishlist');
-  }
-}
-
-function viewWishlist() {
-  if (!currentUser) { openLogin(); return; }
-  // Filter products in wishlist
-  const wlProducts = allProducts.filter(p => wishlist.includes(p.id));
-  if (!wlProducts.length) {
-    scrollToProducts();
-    showToast('Your wishlist is empty');
-    return;
-  }
-  scrollToProducts();
-  renderProducts(wlProducts);
-  document.getElementById('productsTitle').textContent = 'WISHLIST';
-}
-
-async function viewOrders() {
-  if (!currentUser) { openLogin(); return; }
-  try {
-    const data = await api('/api/orders');
-    const orders = data.orders || [];
-    if (!orders.length) {
-      showToast('You have no orders yet');
-      return;
-    }
-    scrollToProducts();
-    document.getElementById('productsTitle').textContent = 'MY ORDERS';
-    document.getElementById('productsLabel').textContent = 'Account';
-    document.getElementById('productsGrid').innerHTML = orders.map(o => `
-      <div style="background:var(--card);padding:1.25rem;border:1px solid var(--border);cursor:default" class="product-card">
-        <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--gray);margin-bottom:0.5rem">ORDER #${o.id ? o.id.slice(-8).toUpperCase() : 'N/A'}</div>
-        <div style="font-weight:600;margin-bottom:0.25rem">${o.items ? o.items.length + ' item(s)' : ''}</div>
-        <div style="font-family:var(--font-mono);font-size:1rem;font-weight:700;color:var(--black)">USD $${Number(o.total || 0).toFixed(2)}</div>
-        <div style="margin-top:0.5rem">
-          <span style="display:inline-block;padding:3px 10px;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:${
-            o.status === 'delivered' ? '#22c55e' : o.status === 'cancelled' ? 'var(--red)' : 'var(--black)'
-          };color:white">${o.status || 'pending'}</span>
-        </div>
-        <div style="font-size:0.75rem;color:var(--gray);margin-top:0.5rem">${new Date(o.createdAt).toLocaleDateString()}</div>
-      </div>`).join('');
-  } catch(e) {
-    showToast('Failed to load orders');
-  }
-}
-
-// ─── AUTH ──────────────────────────────────────────────────────────────────
-function updateUserMenu() {
-  const dropdown = document.getElementById('userDropdown');
-  if (currentUser) {
-    dropdown.innerHTML = `
-      <div style="padding:10px 20px;border-bottom:1px solid var(--border)">
-        <div style="font-weight:600;font-size:0.85rem">${currentUser.firstName || currentUser.username}</div>
-        <div style="font-size:0.75rem;color:var(--gray)">${currentUser.email}</div>
-      </div>
-      ${currentUser.role === 'admin'
-        ? `<a class="user-menu-item" href="/admin" target="_blank" style="color:var(--red);font-weight:600">⚙ Admin Dashboard ↗</a>
-           <div class="user-menu-divider"></div>`
-        : ''}
-      <button class="user-menu-item" onclick="viewOrders()">My Orders</button>
-      <button class="user-menu-item" onclick="viewWishlist()">Wishlist</button>
-      <div class="user-menu-divider"></div>
-      <button class="user-menu-item" style="color:var(--red)" onclick="logout()">Sign Out</button>`;
-  } else {
-    dropdown.innerHTML = `
-      <button class="user-menu-item" onclick="openLogin()">Sign In</button>
-      <button class="user-menu-item" onclick="openRegister()">Create Account</button>`;
-  }
-}
-
-function handleUserBtnClick() {
-  const dd = document.getElementById('userDropdown');
-  const isOpen = dd.style.opacity === '1';
-  dd.style.opacity = isOpen ? '0' : '1';
-  dd.style.pointerEvents = isOpen ? 'none' : 'all';
-}
-
-function openLogin() {
-  document.getElementById('authModalContent').innerHTML = `
-    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
-    <div class="modal-title">SIGN IN</div>
-    <div class="modal-sub">Welcome back to SneakerVault</div>
-    <div class="form-group">
-      <label>Username or Email</label>
-      <input type="text" id="loginUsername" placeholder="your_username">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="loginPassword" placeholder="••••••••">
-    </div>
-    <div class="form-error" id="loginError"></div>
-    <button class="btn-submit" onclick="doLogin()">Sign In</button>
-    <div class="modal-switch">Don't have an account? <a onclick="openRegister()">Create one</a></div>`;
-  openModal('authModal');
-  setTimeout(() => document.getElementById('loginUsername')?.focus(), 300);
-}
-
-function openRegister() {
-  document.getElementById('authModalContent').innerHTML = `
-    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
-    <div class="modal-title">JOIN US</div>
-    <div class="modal-sub">Create your SneakerVault account</div>
-    <div class="form-row">
-      <div class="form-group"><label>First Name</label><input type="text" id="regFirst" placeholder="John"></div>
-      <div class="form-group"><label>Last Name</label><input type="text" id="regLast" placeholder="Doe"></div>
-    </div>
-    <div class="form-group"><label>Username</label><input type="text" id="regUsername" placeholder="john_sneaker"></div>
-    <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="john@email.com"></div>
-    <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Min 6 characters"></div>
-    <div class="form-error" id="regError"></div>
-    <button class="btn-submit" onclick="doRegister()">Create Account</button>
-    <div class="modal-switch">Already have an account? <a onclick="openLogin()">Sign in</a></div>`;
-  openModal('authModal');
-  setTimeout(() => document.getElementById('regFirst')?.focus(), 300);
-}
-
-async function doLogin() {
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  errEl.textContent = '';
-  if (!username || !password) { errEl.textContent = 'Please fill in all fields'; return; }
-  try {
-    const data = await api('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password })
-    });
-    authToken = data.token;
-    currentUser = data.user;
-    localStorage.setItem('sv_token', authToken);
-    localStorage.setItem('sv_user', JSON.stringify(currentUser));
-    if (currentUser.wishlist) {
-      wishlist = currentUser.wishlist;
-      localStorage.setItem('sv_wishlist', JSON.stringify(wishlist));
-    }
-    updateUserMenu();
-    closeModal('authModal');
-    showToast(`Welcome back, ${currentUser.firstName || currentUser.username}! 👋`);
-    renderProducts(allProducts);
-  } catch(e) {
-    errEl.textContent = e.message;
-  }
-}
-
-async function doRegister() {
-  const firstName = document.getElementById('regFirst').value.trim();
-  const lastName = document.getElementById('regLast').value.trim();
-  const username = document.getElementById('regUsername').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
-  const errEl = document.getElementById('regError');
-  errEl.textContent = '';
-  if (!username || !email || !password) {
-    errEl.textContent = 'Please fill in all required fields'; return;
-  }
-  if (password.length < 6) {
-    errEl.textContent = 'Password must be at least 6 characters'; return;
-  }
-  try {
-    const data = await api('/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ firstName, lastName, username, email, password })
-    });
-    authToken = data.token;
-    currentUser = data.user;
-    localStorage.setItem('sv_token', authToken);
-    localStorage.setItem('sv_user', JSON.stringify(currentUser));
-    updateUserMenu();
-    closeModal('authModal');
-    showToast(`Welcome to SneakerVault, ${firstName || username}! 🎉`);
-  } catch(e) {
-    errEl.textContent = e.message;
-  }
-}
-
-function logout() {
-  authToken = null; currentUser = null;
-  localStorage.removeItem('sv_token');
-  localStorage.removeItem('sv_user');
-  wishlist = [];
-  localStorage.removeItem('sv_wishlist');
-  updateUserMenu();
-  renderProducts(allProducts);
-  showToast('Signed out successfully');
-}
-
-// ─── SEARCH ───────────────────────────────────────────────────────────────
-let searchTimeout;
-function openSearch() {
-  document.getElementById('searchOverlay').classList.add('open');
-  document.getElementById('searchInput').focus();
-}
-function closeSearch() {
-  document.getElementById('searchOverlay').classList.remove('open');
-  document.getElementById('searchResults').innerHTML = '';
-  document.getElementById('searchInput').value = '';
-}
-
-function performSearch(q) {
-  clearTimeout(searchTimeout);
-  if (!q.trim()) { document.getElementById('searchResults').innerHTML = ''; return; }
-  searchTimeout = setTimeout(async () => {
     try {
-      const data = await api(`/api/products?search=${encodeURIComponent(q)}`);
-      const grid = document.getElementById('searchResults');
-      const results = data.products || [];
-      grid.innerHTML = results.slice(0, 6).map(p => {
-        const imgHtml = p.image
-          ? `<img src="${API}${p.image}" alt="${p.name}" onerror="this.innerHTML='👟'" style="width:100%;height:100%;object-fit:cover">`
-          : '👟';
-        return `<div class="product-card" style="cursor:pointer" onclick="closeSearch();openDetail('${p.id}')">
-          <div class="product-img" style="height:150px;font-size:60px">${imgHtml}</div>
-          <div class="product-info">
-            <div class="product-brand">${p.brand}</div>
-            <div class="product-name">${p.name}</div>
-            <div class="price-current">USD $${p.price}</div>
-          </div>
-        </div>`;
-      }).join('');
-      if (!results.length) {
-        grid.innerHTML = `<div style="grid-column:1/-1;color:var(--gray)">No results for "${q}"</div>`;
+      const res = await fetch(HEALTH_URL, { cache: 'no-store' });
+      if (res.ok) {
+        // Server is up — redirect to store
+        bar.style.width   = '100%';
+        bar.style.background = '#22c55e';
+        msg.textContent   = 'Ready! Taking you in…';
+        msg.className     = 'status-msg ready';
+        setTimeout(() => { window.location.replace(STORE_URL); }, 600);
+        return;
       }
-    } catch(e) {}
-  }, 300);
-}
+    } catch (_) { /* still booting */ }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeSearch();
-    closeModal('authModal');
-    closeModal('detailModal');
+    if (attempts >= MAX) {
+      msg.textContent = 'Taking longer than usual…';
+      msg.className   = 'status-msg error';
+      btn.style.display = 'inline-block';
+      return; // stop polling, show manual button
+    }
+
+    // Show manual button as a fallback after 20s regardless
+    if (attempts === 10) btn.style.display = 'inline-block';
+
+    setTimeout(ping, DELAY);
   }
-});
 
-// ─── NEWSLETTER ───────────────────────────────────────────────────────────
-function subscribeNewsletter(e) {
-  e.preventDefault();
-  const email = document.getElementById('newsletterEmail').value;
-  if (email) {
-    showToast("You're on the list! 🔥");
-    document.getElementById('newsletterEmail').value = '';
-  }
-}
-
-// ─── MODALS ───────────────────────────────────────────────────────────────
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.querySelectorAll('.modal-overlay').forEach(m =>
-  m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); })
-);
-
-// ─── TOAST ────────────────────────────────────────────────────────────────
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-}
+  // Start first ping after a short delay so the animation plays first
+  setTimeout(ping, 800);
 </script>
 </body>
 </html>

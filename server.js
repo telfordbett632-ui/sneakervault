@@ -66,6 +66,23 @@ const client = new MongoClient(MONGO_URI, {
   serverSelectionTimeoutMS: 5000,
 });
 let db;
+let isReady = false; // flips true once DB is connected
+
+// Middleware: while server is still waking up, serve loading.html for page requests
+app.use((req, res, next) => {
+  if (isReady) return next();
+  // Always pass API and health routes through so the splash page can poll /health
+  if (req.path.startsWith("/api/") || req.path === "/health") return next();
+  // Serve the loading splash
+  const loadingPath = path.join(__dirname, "public", "loading.html");
+  if (fs.existsSync(loadingPath)) return res.sendFile(loadingPath);
+  // Bare-bones fallback if loading.html isn't in public/ yet
+  res.send(`<!DOCTYPE html><html><head><meta http-equiv="refresh" content="3"><title>Loading…</title></head>
+    <body style="background:#0a0a0a;color:#f5f4f0;font-family:sans-serif;display:flex;align-items:center;
+    justify-content:center;height:100vh;margin:0"><div style="text-align:center">
+    <div style="font-size:4rem">👟</div><p style="margin-top:1rem;opacity:.5">Waking up… refreshing shortly</p>
+    </div></body></html>`);
+});
 
 async function connectDB() {
   await client.connect();
@@ -82,6 +99,9 @@ async function connectDB() {
 
   // Seed initial data if collections are empty
   await seedIfEmpty();
+
+  isReady = true;
+  console.log("✅ Server is fully ready — serving live traffic");
 }
 
 async function createIndexes() {
@@ -286,6 +306,11 @@ function adminOnly(req, res, next) {
   }
   next();
 }
+
+// ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime(), timestamp: new Date().toISOString() });
+});
 
 // ─── ROUTES: AUTH ─────────────────────────────────────────────────────────────
 
@@ -902,3 +927,18 @@ connectDB()
     console.error("   Error:", err.message);
     process.exit(1);
   });
+
+// ─── KEEP-ALIVE SELF-PING (prevents Render free tier cold starts) ─────────────
+// Pings the server every 14 minutes so it never spins down due to inactivity
+const SELF_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+setInterval(async () => {
+  try {
+    const http = require("http");
+    const https = require("https");
+    const url = new URL(SELF_URL + "/health");
+    const lib = url.protocol === "https:" ? https : http;
+    lib.get(url.toString(), (res) => {
+      console.log(`🏓 Keep-alive ping → ${res.statusCode}`);
+    }).on("error", () => {});
+  } catch (_) {}
+}, 14 * 60 * 1000); // every 14 minutes
